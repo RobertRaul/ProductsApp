@@ -9,9 +9,9 @@ export const HomeScreen = () => {
                 style={styles.text}
                 category='h1'
             >
-                HOLA MUNDO
+                HomeScreen
             </Text>
-            <Button accessoryLeft={<Icon name='facebook' />} > Cerrar</Button>
+            <Button accessoryLeft={<Icon name='facebook' />} >Iniciar con Facebook</Button>
         </View>
     )
 }

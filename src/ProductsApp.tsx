@@ -9,13 +9,26 @@ export const ProductsApp = () => {
 
     const colorMovil = useColorScheme();
 
-    const theme = colorMovil === 'light' ? eva.light : eva.dark
+    const theme = colorMovil === 'dark' ? eva.dark : eva.light;
+    const backGroundColor = (colorMovil === 'dark')
+        ? theme['color-basic-800']
+        : theme['color-basic-100'];
 
     return (
         <>
             <IconRegistry icons={EvaIconsPack} />
             <ApplicationProvider {...eva} theme={theme}>
-                <NavigationContainer>
+                <NavigationContainer theme={{
+                    dark: colorMovil === 'dark',
+                    colors: {
+                        primary: theme['color-primary-500'],
+                        background: backGroundColor,
+                        card: theme['color-basic-100'],
+                        text: theme['text-basic-color'],
+                        border: theme['color-basic-800'],
+                        notification: theme['color-primary-500'],
+                    }
+                }}>
                     <MyStackNavigator />
                 </NavigationContainer>
             </ApplicationProvider>
