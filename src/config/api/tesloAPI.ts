@@ -8,11 +8,13 @@ export const API_URL = (STAGE === 'prod') ? PROD_URL :
 
 
 const tesloAPI = axios.create({
-    baseURL: API_URL,
+    baseURL: "http://192.168.2.3:3000/api",
     headers: {
         'Content-Type': 'application/json',
     }
+
 })
+
 
 //TODO interceptos
 

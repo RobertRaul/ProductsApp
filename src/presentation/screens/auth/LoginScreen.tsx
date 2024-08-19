@@ -1,11 +1,12 @@
 import { Button, Input, Layout, Text } from '@ui-kitten/components'
-import React from 'react'
-import { useWindowDimensions } from 'react-native'
+import React, { useState } from 'react'
+import { Alert, useWindowDimensions } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { MyIcon } from '../../components/ui/MyIcon'
 import { StackScreenProps } from '@react-navigation/stack'
 import { MyRootStackParams } from '../../navigation/MyStackNavigator'
 import { API_URL, TEST } from "@env"
+import { useAuthStore } from '../store/auth/useAuthStore'
 
 interface Props extends StackScreenProps<MyRootStackParams, 'LoginScreen'> {
 
@@ -13,9 +14,24 @@ interface Props extends StackScreenProps<MyRootStackParams, 'LoginScreen'> {
 
 export const LoginScreen = ({ navigation }: Props) => {
 
+  const { login } = useAuthStore();
+
+  const [form, setForm] = useState({
+    email: '', password: ''
+  });
+
+  const onLogin = async () => {
+    if (form.email.length === 0 || form.password.length === 0) { return }
+
+    const wasSuccessFull = await login(form.email, form.password)
+    if (wasSuccessFull) { return }
+    // console.log(form.email, form.password)
+    Alert.alert('Error', 'Usuario o contraseña incorrectosS');
+  }
+
   const { width, height } = useWindowDimensions();
-  console.log(API_URL)
-  console.log(TEST)
+  // console.log(API_URL)
+  // console.log(TEST)
 
   return (
     <Layout style={{ flex: 1 }}>
@@ -31,6 +47,9 @@ export const LoginScreen = ({ navigation }: Props) => {
             keyboardType='email-address'
             autoCapitalize='none'
             accessoryLeft={<MyIcon name='email-outline' style={{}} />}
+
+            value={form.email}
+            onChangeText={email => setForm({ ...form, email })}
           />
 
           <Input
@@ -38,11 +57,14 @@ export const LoginScreen = ({ navigation }: Props) => {
             style={{ marginBottom: 10 }}
             secureTextEntry
             accessoryLeft={<MyIcon name='lock-outline' style={{}} />}
+
+            value={form.password}
+            onChangeText={password => setForm({ ...form, password })}
           />
         </Layout>
 
         <Layout style={{ height: 10 }} />
-        <Button onPress={() => { }} accessoryRight={<MyIcon white name='arrow-forward-outline' style={{ height: 32, width: 32 }} />}
+        <Button onPress={onLogin} accessoryRight={<MyIcon white name='arrow-forward-outline' style={{ height: 32, width: 32 }} />}
         >Ingresar</Button>
         <Layout style={{ height: 30 }} />
 
