@@ -26,7 +26,7 @@ export const MyStackNavigator = () => {
                 headerShown: false,
                 // cardStyleInterpolator: fadeAnimation 
             }}
-            initialRouteName='LoginScreen'
+            initialRouteName='LoadingScreen'
         >
             <Stack.Screen options={{ cardStyleInterpolator: fadeAnimation }} name="LoadingScreen" component={LoadingScreen} />
             <Stack.Screen options={{ cardStyleInterpolator: fadeAnimation }} name="LoginScreen" component={LoginScreen} />

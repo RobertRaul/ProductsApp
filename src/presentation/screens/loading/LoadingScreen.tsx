@@ -1,26 +1,20 @@
-import { Text } from '@ui-kitten/components';
+import { Layout, Spinner, Text } from '@ui-kitten/components';
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
 export const LoadingScreen = () => {
     return (
-        <View>
-            <Text
-                style={styles.text}
-                category='h1'
-            >
-                HOLA MUNDO
-            </Text>
-        </View>
+        <Layout style={styles.container}>
+            <Spinner status='primary' size='large' />
+        </Layout>
     )
 }
 
 const styles = StyleSheet.create({
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    text: {
-        margin: 2,
-    },
-});
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',        
+    }
+})
+

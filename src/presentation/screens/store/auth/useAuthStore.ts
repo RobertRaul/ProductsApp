@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { User } from "../../../../domain/entities/user";
 import { AuthStatus } from "../../../../infraestructure/interfaces/auth.status";
-import { authLogin } from "../../../../actions/auth/auth";
+import { authCheckStatus, authLogin } from "../../../../actions/auth/auth";
+import { MyStorageAdapter } from "../../../../config/adapters/storage-adapter";
 
 
 export interface AuthState {
@@ -9,6 +10,8 @@ export interface AuthState {
     token?: string;
     user?: User;
     login: (email: string, password: string) => Promise<boolean>;
+    checkStatus: () => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -23,7 +26,30 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
         console.log(response)
         //TODO: save token and user in storage
+        await MyStorageAdapter.setItemAdapter('token', response.token)
+
+        //const storeToken = await MyStorageAdapter.getItemAdapter('token')
+        //console.log({storeToken})
+
         set({ status: 'authenticated', token: response.token, user: response.user });
+
         return true;
+    },
+
+
+    checkStatus: async () => {
+        const response = await authCheckStatus();
+        if (!response) {
+            set({ status: 'unauthenticated', token: undefined, user: undefined });
+            return;
+        }
+
+        await MyStorageAdapter.setItemAdapter('token', response.token)
+        set({ status: 'authenticated', token: response.token, user: response.user });
+    },
+
+    logout: async () => {
+        await MyStorageAdapter.removeItemAdapter('token')
+        set({ status: 'unauthenticated', token: undefined, user: undefined });
     }
 }));

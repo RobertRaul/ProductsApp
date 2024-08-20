@@ -24,14 +24,21 @@ export const authLogin = async (email: string, password: string) => {
         const { data } = await tesloAPI.post<AuthResponse>('/auth/login', {
             email, password
         })
-
         return returnUserToken(data);
-
     } catch (error) {
         // console.log(tesloAPI.getUri())
         // console.log(tesloAPI.defaults.baseURL)
         console.log(error)
         return null
     }
+}
 
+export const authCheckStatus = async () => {
+    try {
+        const { data } = await tesloAPI.get<AuthResponse>('/auth/check-status');
+        return returnUserToken(data);
+    } catch (error) {
+        console.log(error)
+        return null
+    }
 }
