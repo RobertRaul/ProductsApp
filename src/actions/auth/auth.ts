@@ -42,3 +42,15 @@ export const authCheckStatus = async () => {
         return null
     }
 }
+
+export const authRegisterUser = async (email: string, password: string, fullName: string) => {
+    try {
+        const { data } = await tesloAPI.post<AuthResponse>('/auth/register', {
+            email, password, fullName
+        })
+        return returnUserToken(data);
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+}

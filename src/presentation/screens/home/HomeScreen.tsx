@@ -2,20 +2,35 @@ import { Button, Icon, Text } from '@ui-kitten/components'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { useAuthStore } from '../store/auth/useAuthStore'
+import { getProductsByPage } from '../../../actions/products/products'
+import { useQuery } from '@tanstack/react-query'
+import { MainLayout } from '../../layouts/MainLayout'
+import { FullScreenLoader } from '../../components/ui/FullScreenLoader'
+import { ProductList } from '../../components/products/ProductList'
 
 export const HomeScreen = () => {
 
-    const {logout} = useAuthStore();
+    const { logout } = useAuthStore();
+
+    const { isLoading, data: products = [] } = useQuery({
+        queryKey: ['products', 'infinite'],
+        staleTime: 1000 * 60 * 60, //hour
+        queryFn: () => getProductsByPage(0)
+    })
+
+    getProductsByPage(0, 10)
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text
-                style={styles.text}
-                category='h1'
-            >
-                HomeScreen
-            </Text>
-            <Button onPress={logout} accessoryLeft={<Icon name='log-out-outline' />} >Cerrar Sesion</Button>
-        </View>
+        <MainLayout
+            title='API Product'
+            subtitle='Aplicacion Admin'
+            rightAction={() => { }}
+            rightActionIcon='plus-outline'
+        >
+            {
+                isLoading ? (<FullScreenLoader />) : <ProductList products={products} />
+            }
+        </MainLayout>
+
     )
 }
 

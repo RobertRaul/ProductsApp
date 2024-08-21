@@ -3,13 +3,14 @@ import axios from 'axios'
 import { Platform } from 'react-native'
 import { MyStorageAdapter } from '../adapters/storage-adapter';
 
+export const localIPURL = "http://192.168.2.3:3000/api"
 
 export const API_URL = (STAGE === 'prod') ? PROD_URL :
     Platform.OS === 'ios' ? API_URL_IOS : API_URL_ANDROID;
 
 
 const tesloAPI = axios.create({
-    baseURL: "http://192.168.2.3:3000/api",
+    baseURL: localIPURL,
     headers: {
         'Content-Type': 'application/json',
     }
