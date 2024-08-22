@@ -6,7 +6,7 @@ interface Props {
     name: string;
     color?: string;
     white?: boolean;
-    style: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
 }
 
 export const MyIcon = ({ name, color, white, style }: Props) => {
