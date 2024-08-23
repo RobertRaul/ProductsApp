@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from 'react'
 
 import { MainLayout } from '../../layouts/MainLayout'
-import { Button, ButtonGroup, Input, Layout, Text, useTheme } from '@ui-kitten/components'
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, ButtonGroup, Input, Layout, useTheme } from '@ui-kitten/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { StackScreenProps } from '@react-navigation/stack'
 import { MyRootStackParams } from '../../navigation/MyStackNavigator'
-import { getProductsById } from '../../../actions/products/getProducts-byid'
 import { ScrollView } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
-import { FadeInImage } from '../../components/ui/FadeInImage'
 import { Gender, Product, Size } from '../../../domain/entities/product'
 import { MyIcon } from '../../components/ui/MyIcon'
 import { Formik } from 'formik'
-import { UpdateAndCreateProduct } from '../../../actions/products/update-create-product'
+
+import { getProductsById, UpdateAndCreateProduct } from '../../../actions/products'
+import { ProductImages } from '../../components/products/ProductImages'
+import { MyCameraAdapter } from '../../../config/adapters/camera-adapter'
 
 interface Props extends StackScreenProps<MyRootStackParams, 'ProductScreen'> { }
 
@@ -62,27 +62,22 @@ export const ProductScreen = ({ route }: Props) => {
     >
       {
         ({ handleChange, handleSubmit, values, errors, setFieldValue }) => (
-          <MainLayout title={values.title} subtitle={`Precio: ${values.price}`}>
+          <MainLayout
+            title={values.title}
+            subtitle={`Precio: ${values.price}`}
+            rightAction={async () => {
+              //const photos = await MyCameraAdapter.takePicture();
+              const photos = await MyCameraAdapter.getPicturesFromLibrary()
+              setFieldValue('images', [...values.images, ...photos])
+            }}
+            rightActionIcon='camera-outline'
+          >
             <ScrollView style={{ flex: 1 }}>
               {/*Imagenes de Productos */}
-              <Layout>
+              <Layout style={{ marginVertical: 10, alignItems: 'center', justifyContent: 'center' }}>
                 {/*//TODO: considerar cuando no hay imagenes*/}
-                {
-                  <FlatList
-                    data={values.images}
-                    keyExtractor={(item) => item}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                      <FadeInImage uri={item} style={{
-                        width: 300,
-                        height: 300,
-                        marginHorizontal: 7
-                      }} />
-                    )}
-                  >
-                  </FlatList>
-                }
+
+                <ProductImages images={values.images} />
               </Layout>
               {/*Titulo */}
               <Layout style={{ marginHorizontal: 10 }}>
@@ -135,7 +130,7 @@ export const ProductScreen = ({ route }: Props) => {
                 disabled={mutation.isPending}
                 accessoryLeft={<MyIcon name="save-outline" white style={{ width: 30, height: 20 }} />}
               >Guardar</Button>
-              <Text>{JSON.stringify(values, null, 4)} </Text>
+              {/* <Text>{JSON.stringify(values, null, 4)} </Text> */}
 
               <Layout style={{ height: 200 }} />
             </ScrollView>
@@ -144,6 +139,6 @@ export const ProductScreen = ({ route }: Props) => {
       }
 
 
-    </Formik>
+    </Formik >
   )
 }
