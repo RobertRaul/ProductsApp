@@ -77,7 +77,7 @@ const uploadImages = async (img: string) => {
         uri: img,
         type: 'image/jpeg',
         name: img.split('/').pop()
-    })
+    });
 
     const { data } = await tesloAPI.post<{ image: string }>('/files/upload', formData, {
         headers: {

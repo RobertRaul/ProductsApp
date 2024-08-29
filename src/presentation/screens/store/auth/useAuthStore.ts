@@ -52,6 +52,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     logout: async () => {
         await MyStorageAdapter.removeItemAdapter('token')
         set({ status: 'unauthenticated', token: undefined, user: undefined });
+        console.log('LOGOOUT')
     },
 
     register: async (email: string, password: string, fullName: string) => {
